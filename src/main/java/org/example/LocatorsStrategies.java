@@ -45,7 +45,7 @@ public class LocatorsStrategies {
         // Compound class names not permitted
         try {
             playButton = driver.findElement(By.className("bi bi-play-fill"));
-        } catch (InvalidSelectorException _) {
+        } catch (InvalidSelectorException e) {
 
         }
 

@@ -30,4 +30,15 @@ public class LoginPage {
 
         return new HomePage(driver);
     }
+
+    public LoginPage loginWithInvalidInput(String email,String password){
+        driver.findElement(emailFieldBy).sendKeys(email);
+        driver.findElement(passwordFieldBy).sendKeys(password);
+        driver.findElement(loginButtonBy).click();
+        return this;
+    }
+
+    public boolean failedLogIn(){
+        return driver.getTitle().contains("Login");
+    }
 }

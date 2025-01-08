@@ -27,6 +27,31 @@ public class POMSpotifyLoginTest {
         assertTrue(home.isLoggedInSuccessfully());
     }
 
+    @Test
+    public void testInValidLoginEmptyName() {
+        LoginPage login = loginPage.loginWithInvalidInput("", "password123");
+        assertTrue(login.failedLogIn());
+    }
+
+    @Test
+    public void testInValidLoginEmptyPassword() {
+        LoginPage login = loginPage.loginWithInvalidInput("user@example.com", "");
+        assertTrue(login.failedLogIn());
+    }
+
+    @Test
+    public void testInValidLoginEmptyFields() {
+        LoginPage login = loginPage.loginWithInvalidInput("", "");
+        assertTrue(login.failedLogIn());
+    }
+
+    @Test
+    public void testInValidLoginEmail() {
+        LoginPage login = loginPage.loginWithInvalidInput("moslem@@@@abc", "");
+        assertTrue(login.failedLogIn());
+    }
+
+
     @AfterEach
     public void tearDown() {
         driver.quit();
