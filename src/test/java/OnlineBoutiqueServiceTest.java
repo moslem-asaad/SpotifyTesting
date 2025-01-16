@@ -1,3 +1,4 @@
+import org.example.DriverFactory;
 import org.example.LoginPage;
 import org.example.OnlineBoutiqueService.Currency;
 import org.example.OnlineBoutiqueService.Product;
@@ -8,6 +9,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.example.OnlineBoutiqueService.HomePage;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,12 +23,20 @@ public class OnlineBoutiqueServiceTest {
 
     private HomePage homePage;
 
+
+
     @BeforeEach
-    public void setUp() {
-        driver = new ChromeDriver();
+    public void setUp() throws MalformedURLException {
+        driver = DriverFactory.getDriver();
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--headless");
+//        driver = new RemoteWebDriver(new URL("http://16.171.132.126:4444"), options);
+        homePage = new HomePage(driver).get();
+
+        /*driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.get("https://cymbal-shops.retail.cymbal.dev/");
-        homePage = new HomePage(driver);
+        //driver.get("https://cymbal-shops.retail.cymbal.dev/");
+        homePage = new HomePage(driver).get();*/
     }
 
     @Test

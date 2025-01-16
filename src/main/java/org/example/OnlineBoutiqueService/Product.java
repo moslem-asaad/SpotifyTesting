@@ -4,22 +4,34 @@ import org.checkerframework.checker.units.qual.C;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.LoadableComponent;
 import org.openqa.selenium.support.ui.Select;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 import java.time.Duration;
 import java.util.List;
 
-public class Product {
+public class Product extends LoadableComponent<Product> {
+
+    private final String baseURL = "https://cymbal-shops.retail.cymbal.dev";
 
     WebDriver driver;
 
-    private By quantitySelector = By.id("quantity");
+    @FindBy(id = "quantity")
+    private WebElement quantitySelector;
 
-    private By addToCartButton = By.className("cymbal-button-primary");
+    @FindBy(className = "cymbal-button-primary")
+    private WebElement addToCartButton ;
 
-    private By productWrapper = By.className("product-wrapper");
+
+    @FindBy(className = "product-wrapper")
+    private WebElement productWrapper;
 
     private String title;
+    private String productURI;
 
 
     public Product (WebDriver driver){
@@ -28,11 +40,17 @@ public class Product {
 
     }
 
-    public Product (WebDriver driver, String title){
-        this.driver = driver;
+    public Product (WebDriver driver, String title,String productURI){
+        /*this.driver = driver;
         this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
 
+        this.title = title;*/
+
+        this.driver = driver;
         this.title = title;
+        System.out.println(productURI);
+        this.productURI = productURI;
+        PageFactory.initElements(driver,this);
 
     }
     public Product selectQuantityByIndex(int index){
@@ -55,11 +73,11 @@ public class Product {
     }
 
     public boolean verifyTheChosenProduct(){
-        System.out.println(driver.findElement(productWrapper).getText());
-        return driver.findElement(productWrapper).getText().contains(title);
+       // System.out.println(driver.findElement(productWrapper).getText());
+        return productWrapper.getText().contains(title);
     }
     public WebElement getQuantityList(){
-        WebElement quantityList = driver.findElement(quantitySelector);
+        WebElement quantityList = quantitySelector;
         if (quantityList == null){
             throw new IllegalArgumentException("Quantity Should be in the dom");
         }
@@ -67,7 +85,7 @@ public class Product {
     }
 
     public WebElement getAddToCartButton(){
-        WebElement addToCartButton = driver.findElement(this.addToCartButton);
+        WebElement addToCartButton = this.addToCartButton;
         if (addToCartButton == null){
             throw new IllegalArgumentException("add to cart button Should be in the dom");
         }
@@ -80,6 +98,14 @@ public class Product {
     }
 
 
+    @Override
+    protected void load() {
+        this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+        driver.get(baseURL + productURI);
+    }
 
-
+    @Override
+    protected void isLoaded() throws Error {
+        assertTrue(driver.getCurrentUrl().contains("product"));
+    }
 }
